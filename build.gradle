@@ -1,0 +1,82 @@
+plugins {
+    id "com.jfrog.bintray" version "1.8.4"
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+dependencies {
+
+	compile 'io.vertx:vertx-core:3.6.3'
+	compile 'com.mdac:vertx-elasticsearch-indexer:1.0.0_Beta'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+	
+	testCompile 'io.vertx:vertx-web:3.6.3'
+	testCompile 'io.vertx:vertx-config:3.6.3'
+	testCompile 'io.vertx:vertx-config-yaml:3.6.3'
+	testCompile 'junit:junit:4.12'
+	
+}
+
+
+sourceCompatibility='1.8'
+targetCompatibility='1.8'
+
+jar.archiveName = "vertx-logback-elasticsearch-appender-1.0.0_Beta.jar"
+bintrayUpload.packageName = "vertx-logback-elasticsearch-appender-1.0.0_Beta.jar"
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            
+            groupId 'com.mdac'
+            artifactId 'vertx-logback-elasticsearch-appender'
+            version '1.0.0_Beta'
+            
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}
+
+bintray {
+	user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+	key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    
+    publications = ['mavenJava']
+    dryRun = false
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'vertx-logback-elasticsearch-appender'
+        licenses = ['Apache-2.0']
+        labels = ['vertx', 'log', 'accesslog']
+        publicDownloadNumbers = true
+        //Optional version descriptor
+        override = false
+        vcsUrl = 'https://github.com/romanpierson/vertx-logback-elasticsearch-appender.git'
+        version {
+        	name = '1.0.0_Beta'
+        }
+    }
+}
+
+wrapper() {
+  gradleVersion = '5.0'
+}
+
