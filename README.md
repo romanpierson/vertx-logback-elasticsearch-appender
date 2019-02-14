@@ -31,7 +31,7 @@ The instance identifier refers to the index configuration on the vertx-elasticse
 
 ## Changelog
 
-### 1.1.0 (2019-02-10)
+### 1.0.0 (2019-02-14)
 
 * Initial version
 

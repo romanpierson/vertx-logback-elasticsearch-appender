@@ -5,7 +5,6 @@ plugins {
 repositories {
     mavenCentral()
     jcenter()
-    mavenLocal()
 }
 
 apply plugin: 'eclipse'
@@ -16,7 +15,7 @@ apply plugin: 'com.jfrog.bintray'
 dependencies {
 
 	compile 'io.vertx:vertx-core:3.6.3'
-	compile 'com.mdac:vertx-elasticsearch-indexer:1.0.0_Beta'
+	compile 'com.mdac:vertx-elasticsearch-indexer:1.0.0'
     compile 'ch.qos.logback:logback-classic:1.2.3'
 	
 	testCompile 'io.vertx:vertx-web:3.6.3'
@@ -30,8 +29,8 @@ dependencies {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-logback-elasticsearch-appender-1.0.0_Beta.jar"
-bintrayUpload.packageName = "vertx-logback-elasticsearch-appender-1.0.0_Beta.jar"
+jar.archiveName = "vertx-logback-elasticsearch-appender-1.0.0.jar"
+bintrayUpload.packageName = "vertx-logback-elasticsearch-appender-1.0.0.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -43,7 +42,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-logback-elasticsearch-appender'
-            version '1.0.0_Beta'
+            version '1.0.0'
             
             from components.java
 
@@ -65,13 +64,13 @@ bintray {
         repo = 'maven'
         name = 'vertx-logback-elasticsearch-appender'
         licenses = ['Apache-2.0']
-        labels = ['vertx', 'log', 'accesslog']
+        labels = ['vertx', 'log', 'logback', 'elasticsearch']
         publicDownloadNumbers = true
         //Optional version descriptor
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-logback-elasticsearch-appender.git'
         version {
-        	name = '1.0.0_Beta'
+        	name = '1.0.0'
         }
     }
 }
