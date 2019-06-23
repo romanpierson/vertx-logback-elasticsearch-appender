@@ -24,10 +24,46 @@ dependencies {
 
 <appender name="ES" class="com.mdac.logback.vertx.elasticsearch.appender.LogbackElasticSearchAppender" level="info">
   	<instanceIdentifier>applicationlog</instanceIdentifier>
+  	<properties>
+            <property>
+                <name>host</name>
+                <value>${HOSTNAME}</value>
+            </property>
+            <property>
+                <name>level</name>
+                <value>%level</value>
+            </property>
+            <property>
+                <name>thread</name>
+                <value>%thread</value>
+            </property>
+            <property>
+                <name>message</name>
+                <value>%message</value>
+            </property>
+            <property>
+                <name>stacktrace</name>
+                <value>%ex</value>
+            </property>
+            <property>
+                <name>stacktrace</name>
+                <value>%exhash</value>
+            </property>
+            <property>
+                <name>logger</name>
+                <value>%logger</value>
+            </property>
+            <property>
+                <name>app</name>
+                <value>myapp</value>
+            </property>
+        </properties>
 </appender>
 
 ```
-The instance identifier refers to the index configuration on the vertx-elasticsearch-indexer verticle
+The instance identifier refers to the index configuration on the vertx-elasticsearch-indexer verticle.
+
+Environment properties can be defined as ${propname}. Static values can be just maintaned setting the value directly.
 
 ## Changelog
 
@@ -35,4 +71,7 @@ The instance identifier refers to the index configuration on the vertx-elasticse
 
 * Initial version
 
+### 1.1.0 (2019-06-23)
 
+* Values are configurable
+* Stacktrace hash added as an option

@@ -14,13 +14,13 @@ apply plugin: 'com.jfrog.bintray'
 
 dependencies {
 
-	compile 'io.vertx:vertx-core:3.6.3'
+	compile 'io.vertx:vertx-core:3.7.1'
 	compile 'com.mdac:vertx-elasticsearch-indexer:1.0.0'
     compile 'ch.qos.logback:logback-classic:1.2.3'
 	
-	testCompile 'io.vertx:vertx-web:3.6.3'
-	testCompile 'io.vertx:vertx-config:3.6.3'
-	testCompile 'io.vertx:vertx-config-yaml:3.6.3'
+	testCompile 'io.vertx:vertx-web:3.7.1'
+	testCompile 'io.vertx:vertx-config:3.7.1'
+	testCompile 'io.vertx:vertx-config-yaml:3.7.1'
 	testCompile 'junit:junit:4.12'
 	
 }
@@ -29,8 +29,8 @@ dependencies {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-logback-elasticsearch-appender-1.0.0.jar"
-bintrayUpload.packageName = "vertx-logback-elasticsearch-appender-1.0.0.jar"
+jar.archiveName = "vertx-logback-elasticsearch-appender-1.1.0.jar"
+bintrayUpload.packageName = "vertx-logback-elasticsearch-appender-1.1.0.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -42,7 +42,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-logback-elasticsearch-appender'
-            version '1.0.0'
+            version '1.1.0'
             
             from components.java
 
@@ -70,7 +70,7 @@ bintray {
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-logback-elasticsearch-appender.git'
         version {
-        	name = '1.0.0'
+        	name = '1.1.0'
         }
     }
 }
