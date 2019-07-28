@@ -21,8 +21,8 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -38,7 +38,6 @@ public class ServerSetupStarter {
 	
 	public static void main(String[] args) throws InterruptedException {
 		
-		System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
 		System.setProperty("vertx.threadChecks", "false");
 		
 		final Vertx vertx = Vertx.vertx(new VertxOptions().setWarningExceptionTimeUnit(TimeUnit.MINUTES).setWarningExceptionTime(4).setBlockedThreadCheckIntervalUnit(TimeUnit.MINUTES).setBlockedThreadCheckInterval(4));

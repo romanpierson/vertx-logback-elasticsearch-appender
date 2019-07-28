@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/romanpierson/vertx-logback-elasticsearch-appender.svg?branch=master)](https://travis-ci.org/romanpierson/vertx-logback-elasticsearch-appender) ![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
+[![Build Status](https://travis-ci.org/romanpierson/vertx-logback-elasticsearch-appender.svg?branch=master)](https://travis-ci.org/romanpierson/vertx-logback-elasticsearch-appender) 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=romanpierson_vertx-logback-elasticsearch-appender&metric=coverage)](https://sonarcloud.io/dashboard?id=romanpierson_vertx-logback-elasticsearch-appender)
+![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)
 
 # vertx-logback-elasticsearch-appender
 
@@ -12,7 +14,7 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.mdac:vertx-logback-elasticsearch-appender:1.0.0'
+	compile 'com.mdac:vertx-logback-elasticsearch-appender:1.2.0_RC1'
 }
 ```
 
@@ -75,3 +77,7 @@ Environment properties can be defined as ${propname}. Static values can be just 
 
 * Values are configurable
 * Stacktrace hash added as an option
+
+### 1.2.0_RC1 (2019-07-28)
+
+* Upgrade to Vertx 4
