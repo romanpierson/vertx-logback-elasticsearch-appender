@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
-	private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
 	private EventBus vertxEventBus;
 
@@ -37,7 +37,7 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 	private BlockingQueue<JsonObject> offlineQueue = new LinkedBlockingQueue<>();
 
-	ThrowableProxyConverter fullStackTraceConverter;
+	private ThrowableProxyConverter fullStackTraceConverter;
 
 	// Appender Settings
 	private String instanceIdentifier;
@@ -46,14 +46,14 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 	private MessageDigest hashDigest;
 
 	// Configured output
-	private String level = null;
-	private String thread = null;
-	private String message = null;
-	private String stackTrace = null;
-	private String stackTraceHash = null;
-	private String logger = null;
+	private String labelLevel = null;
+	private String labelThread = null;
+	private String labelMessage = null;
+	private String labelStackTrace = null;
+	private String labelStackTraceHash = null;
+	private String labelLogger = null;
 
-	private Map<String, String> extraParameters = new HashMap<String, String>();
+	private Map<String, String> extraParameters = new HashMap<>();
 
 	@Override
 	public void start() {
@@ -100,22 +100,22 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 	private boolean resolveStaticProperty(final Property property) {
 
 		if ("%level".equalsIgnoreCase(property.getValue())) {
-			level = property.getName();
+			labelLevel = property.getName();
 			return true;
 		} else if ("%thread".equalsIgnoreCase(property.getValue())) {
-			thread = property.getName();
+			labelThread = property.getName();
 			return true;
 		} else if ("%message".equalsIgnoreCase(property.getValue())) {
-			message = property.getName();
+			labelMessage = property.getName();
 			return true;
 		} else if ("%ex".equalsIgnoreCase(property.getValue())) {
-			stackTrace = property.getName();
+			labelStackTrace = property.getName();
 			return true;
 		} else if ("%exhash".equalsIgnoreCase(property.getValue())) {
-			stackTraceHash = property.getName();
+			labelStackTraceHash = property.getName();
 			return true;
 		} else if ("%logger".equalsIgnoreCase(property.getValue())) {
-			logger = property.getName();
+			labelLogger = property.getName();
 			return true;
 		}
 
@@ -157,7 +157,7 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 			try {
 				this.offlineQueue.put(convert(eventObject));
 			} catch (Exception ex) {
-				LOG.error("Error when trying to add event to offline queue", ex);
+				logger.error("Error when trying to add event to offline queue", ex);
 			}
 		}
 
@@ -171,21 +171,21 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 		JsonObject jsonMessage = new JsonObject();
 
-		if (level != null)
-			jsonMessage.put(level, loggingEvent.getLevel().toString());
-		if (message != null)
-			jsonMessage.put("message", loggingEvent.getFormattedMessage());
-		if (thread != null)
-			jsonMessage.put(thread, loggingEvent.getThreadName());
-		if (logger != null)
-			jsonMessage.put(logger, loggingEvent.getLoggerName());
+		if (labelLevel != null)
+			jsonMessage.put(labelLevel, loggingEvent.getLevel().toString());
+		if (labelMessage != null)
+			jsonMessage.put(labelMessage, loggingEvent.getFormattedMessage());
+		if (labelThread != null)
+			jsonMessage.put(labelThread, loggingEvent.getThreadName());
+		if (labelLogger != null)
+			jsonMessage.put(labelLogger, loggingEvent.getLoggerName());
 
-		if (loggingEvent.getThrowableProxy() != null && (stackTrace != null || stackTraceHash != null)) {
-			final String stackTrace = fullStackTraceConverter.convert(loggingEvent);
-			if (stackTrace != null)
-				jsonMessage.put("stackTrace", stackTrace);
-			if (stackTraceHash != null)
-				jsonMessage.put("stackTraceHash", getHash(stackTrace));
+		if (loggingEvent.getThrowableProxy() != null && (labelStackTrace != null || labelStackTraceHash != null)) {
+			final String stackTraceAsString = fullStackTraceConverter.convert(loggingEvent);
+			if (labelStackTrace != null && stackTraceAsString != null)
+				jsonMessage.put(labelStackTrace, stackTraceAsString);
+			if (labelStackTraceHash != null && stackTraceAsString != null)
+				jsonMessage.put(labelStackTraceHash, getHash(stackTraceAsString));
 		}
 
 		for (final Entry<String, String> entry : extraParameters.entrySet()) {
@@ -200,10 +200,8 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 		if (isVertxInitialized) {
 			return;
-		} else if (Vertx.currentContext() == null) {
+		} else if (Vertx.currentContext() == null || isInitalizingInProcess) {
 			// As long as Vertx context is not ready there is no sense to continue
-			return;
-		} else if (isInitalizingInProcess) {
 			return;
 		}
 
@@ -212,20 +210,18 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 		long startBusTS = System.currentTimeMillis();
 		vertxEventBus = Vertx.currentContext().owner().eventBus();
 
-		LOG.info("Successfully connected to Vertx Event Bus - took [" + (System.currentTimeMillis() - startBusTS)
+		logger.info("Successfully connected to Vertx Event Bus - took [" + (System.currentTimeMillis() - startBusTS)
 				+ "] ms");
 
 		int currentSize = offlineQueue.size() + 1;
 
-		LOG.info("Offline queue not empty - sending [" + currentSize + "] events to ElasticSearchIndexerVerticle");
+		logger.info("Offline queue not empty - sending [" + currentSize + "] events to ElasticSearchIndexerVerticle");
 
 		final Collection<JsonObject> drainedValues = new ArrayList<>(currentSize);
 
 		this.offlineQueue.drainTo(drainedValues, currentSize);
 
-		drainedValues.forEach(s -> {
-			vertxEventBus.send(ElasticSearchIndexerConstants.EVENTBUS_EVENT_NAME, s);
-		});
+		drainedValues.forEach(s -> vertxEventBus.send(ElasticSearchIndexerConstants.EVENTBUS_EVENT_NAME, s));
 
 		isVertxInitialized = true;
 
