@@ -134,8 +134,15 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 		String hashtext = no.toString(16);
 
 		// Add preceding 0s to make it 32 bit
-		while (hashtext.length() < 32) {
-			hashtext = "0" + hashtext;
+		if (hashtext.length() < 32) {
+			final StringBuilder sb = new StringBuilder();
+
+			for (int i = hashtext.length(); i < 32; i++) {
+				sb.append('0');
+			}
+			sb.append(hashtext);
+
+			hashtext = sb.toString();
 		}
 
 		// return the HashText
@@ -198,10 +205,7 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 	private void initializeVertxIfRequired() {
 
-		if (isVertxInitialized) {
-			return;
-		} else if (Vertx.currentContext() == null || isInitalizingInProcess) {
-			// As long as Vertx context is not ready there is no sense to continue
+		if (isVertxInitialized || Vertx.currentContext() == null || isInitalizingInProcess) {
 			return;
 		}
 

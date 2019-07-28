@@ -24,7 +24,7 @@
                 <value>%ex</value>
             </property>
             <property>
-                <name>stacktrace</name>
+                <name>stacktraceHash</name>
                 <value>%exhash</value>
             </property>
             <property>
