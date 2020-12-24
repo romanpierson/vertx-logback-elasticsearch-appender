@@ -1,5 +1,8 @@
 plugins {
-    id "com.jfrog.bintray" version "1.8.4"
+	id 'java'
+	id 'maven-publish'
+	id 'jacoco'
+    id "com.jfrog.bintray" version "1.8.5"
 }
 
 repositories {
@@ -7,26 +10,29 @@ repositories {
     jcenter()
 }
 
-apply plugin: 'eclipse'
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'jacoco'
+ext{
+	vertxVersion = '4.0.0'
+	vertxElasticsearchIndexer = '1.1.0'
+	jupiterVersion = '5.7.0'
+	jupiterLauncherVersion ='1.7.0'
+	slfApiVersion = '1.7.30'
+	logbackVersion = '1.2.3'
+}
 
 dependencies {
 
-	compile 'io.vertx:vertx-core:4.0.0-milestone1'
-	compile 'org.slf4j:slf4j-api:1.7.26'
-	compile 'com.mdac:vertx-elasticsearch-indexer:1.1.0_RC1'
-    compile 'ch.qos.logback:logback-classic:1.2.3'
+	implementation "io.vertx:vertx-core:${vertxVersion}"
+	implementation "org.slf4j:slf4j-api:${slfApiVersion}"
+	implementation "com.mdac:vertx-elasticsearch-indexer:${vertxElasticsearchIndexer}"
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
 	
-	testCompile 'io.vertx:vertx-web:4.0.0-milestone1'
-	testCompile 'io.vertx:vertx-config:4.0.0-milestone1'
-	testCompile 'io.vertx:vertx-config-yaml:4.0.0-milestone1'
+	testImplementation "io.vertx:vertx-web:${vertxVersion}"
+	testImplementation "io.vertx:vertx-config:${vertxVersion}"
+	testImplementation "io.vertx:vertx-config-yaml:${vertxVersion}"
 	
-	testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.0")
-    testCompile("org.junit.platform:junit-platform-launcher:1.5.0")
+	testImplementation "org.junit.jupiter:junit-jupiter-api:${jupiterVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}"
+    testImplementation "org.junit.platform:junit-platform-launcher:${jupiterLauncherVersion}"
 	
 }
 
@@ -34,8 +40,8 @@ dependencies {
 sourceCompatibility='1.8'
 targetCompatibility='1.8'
 
-jar.archiveName = "vertx-logback-elasticsearch-appender-1.2.0_RC1.jar"
-bintrayUpload.packageName = "vertx-logback-elasticsearch-appender-1.2.0_RC1.jar"
+jar.archiveFileName = "vertx-logback-elasticsearch-appender-1.2.0.jar"
+bintrayUpload.packageName = "vertx-logback-elasticsearch-appender-1.2.0.jar"
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
@@ -47,7 +53,7 @@ publishing {
             
             groupId 'com.mdac'
             artifactId 'vertx-logback-elasticsearch-appender'
-            version '1.2.0_RC1'
+            version '1.2.0'
             
             from components.java
 
@@ -80,7 +86,7 @@ bintray {
         override = false
         vcsUrl = 'https://github.com/romanpierson/vertx-logback-elasticsearch-appender.git'
         version {
-        	name = '1.2.0_RC1'
+        	name = '1.2.0'
         }
     }
 }
@@ -93,6 +99,6 @@ jacocoTestReport {
 }
 
 wrapper() {
-  gradleVersion = '5.5.1'
+  gradleVersion = '6.7.1'
 }
 

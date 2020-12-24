@@ -12,13 +12,13 @@
  */
 package com.mdac.vertx.web.accesslogger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.handler.CookieHandler;
 
 /**
  * 
@@ -41,8 +41,6 @@ public class HttpServerVerticle extends AbstractVerticle {
 		
 		Router router = Router.router(vertx);
 		
-		// Handle cookies
-		router.route().handler(CookieHandler.create());
 		
 		router.errorHandler(500, handler -> {
 			LOG.error("500 error happened", handler);

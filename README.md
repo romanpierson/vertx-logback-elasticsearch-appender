@@ -78,6 +78,6 @@ Environment properties can be defined as ${propname}. Static values can be just 
 * Values are configurable
 * Stacktrace hash added as an option
 
-### 1.2.0_RC1 (2019-07-28)
+### 1.2.0 (2020-12-24)
 
 * Upgrade to Vertx 4
