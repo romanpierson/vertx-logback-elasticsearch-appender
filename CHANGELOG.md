@@ -1,20 +1,20 @@
 ## Changelog
 
 
-#### 1.0.0
+### 1.0.0
 
 (2019-02-14)
 
 * Initial version
 
-#### 1.1.0
+### 1.1.0
 
 (2019-06-23)
 
 * Values are configurable
 * Stacktrace hash added as an option
 
-### 1.3.0
+### 1.2.0
 
 (2020-12-24)
 
