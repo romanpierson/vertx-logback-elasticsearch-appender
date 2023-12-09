@@ -1,6 +1,6 @@
 <configuration>
   
-  <appender name="ES" class="com.mdac.logback.vertx.elasticsearch.appender.LogbackElasticSearchAppender" level="info">
+  <appender name="ES" class="com.romanpierson.logback.vertx.elasticsearch.appender.LogbackElasticSearchAppender" level="info">
   	<instanceIdentifier>applicationlog</instanceIdentifier>
   	<properties>
             <property>

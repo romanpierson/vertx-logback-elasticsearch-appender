@@ -10,7 +10,7 @@
  *
  * You may elect to redistribute this code under either of these licenses.
  */
-package com.mdac.vertx.web.accesslogger;
+package com.romanpierson.vertx.web.accesslogger;
 
 import java.util.concurrent.TimeUnit;
 
