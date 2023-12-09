@@ -6,13 +6,12 @@ plugins {
 }
 
 repositories {
-	mavenLocal()
     mavenCentral()
 }
 
 ext{
 	vertxVersion = '4.5.0'
-	vertxElasticsearchIndexer = '1.2.0-RC1'
+	vertxElasticsearchIndexer = '1.2.0'
 	jupiterVersion = '5.10.0'
 	jupiterLauncherVersion ='1.10.0'
 	slfApiVersion = '2.0.9'
