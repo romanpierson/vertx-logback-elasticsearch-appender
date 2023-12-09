@@ -62,7 +62,7 @@ publishing {
 
 sonar {
   properties {
-    property "sonar.projectKey", "romanpierson_vertx-logback-elasticsearch-indexer"
+    property "sonar.projectKey", "romanpierson_vertx-logback-elasticsearch-appender"
     property "sonar.organization", "romanpierson"
     property "sonar.host.url", "https://sonarcloud.io"
     property "sonar.sources", "src/main"
