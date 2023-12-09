@@ -1,5 +1,5 @@
 verticles:
-  - verticleClassName: com.mdac.vertx.elasticsearch.indexer.verticle.ElasticSearchIndexerVerticle
+  - verticleClassName: com.romanpierson.vertx.elasticsearch.indexer.verticle.ElasticSearchIndexerVerticle
     instances: 1
     isWorker: true
     config:

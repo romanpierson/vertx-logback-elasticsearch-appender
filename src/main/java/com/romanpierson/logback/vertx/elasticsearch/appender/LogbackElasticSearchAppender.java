@@ -1,4 +1,4 @@
-package com.mdac.logback.vertx.elasticsearch.appender;
+package com.romanpierson.logback.vertx.elasticsearch.appender;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -12,10 +12,12 @@ import java.util.Map.Entry;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.mdac.logback.vertx.elasticsearch.appender.config.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mdac.logback.vertx.elasticsearch.appender.config.Property;
-import com.mdac.vertx.elasticsearch.indexer.ElasticSearchIndexerConstants;
-import com.mdac.vertx.elasticsearch.indexer.ElasticSearchIndexerConstants.Message.Structure.Field;
+import com.romanpierson.vertx.elasticsearch.indexer.ElasticSearchIndexerConstants;
+import com.romanpierson.vertx.elasticsearch.indexer.ElasticSearchIndexerConstants.Message.Structure.Field;
 
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -23,8 +25,6 @@ import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
@@ -41,7 +41,7 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 	// Appender Settings
 	private String instanceIdentifier;
-	private Properties properties;
+	private Collection<Property> properties;
 
 	private MessageDigest hashDigest;
 
@@ -71,8 +71,8 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 			errors++;
 			addError("\"instanceIdentifier\" property not set for appender named [" + name + "].");
 		}
-
-		for (final Property property : this.getProperties().getProperties()) {
+		
+		for (final Property property : this.properties) {
 
 			if (property.getName() == null || property.getName().trim().isEmpty() || property.getValue() == null
 					|| property.getValue().trim().isEmpty()) {
@@ -86,7 +86,7 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 			extraParameters.put(property.getName(), property.getValue());
 		}
-
+		
 		fullStackTraceConverter = new ThrowableProxyConverter();
 		fullStackTraceConverter.setOptionList(Arrays.asList("full"));
 		fullStackTraceConverter.start();
@@ -238,13 +238,34 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 	public void setInstanceIdentifier(final String instanceIdentifier) {
 		this.instanceIdentifier = instanceIdentifier;
 	}
-
-	public Properties getProperties() {
-		return properties;
-	}
-
-	public void setProperties(Properties properties) {
-		this.properties = properties;
+	
+	public void setIndexProperties(String indexPropertiesConfiguration) {
+		
+		// As logback seems to have complicated much the handling of custom models we use a more simpler approach for now
+		// Basically the properties are passed as string in a single configuration string
+		// label1,value1,label2,value2,labelN,valueN
+		
+		final String[] tokens = indexPropertiesConfiguration == null ?  null : indexPropertiesConfiguration.split(",");
+		
+		if(tokens == null || tokens.length == 0 || tokens.length % 2 != 0) {
+			logger.error("Value provided for indexProperties invalid");
+			return;
+		}
+		
+		this.properties = new ArrayList<>();
+		
+		// If we come here it means we have pairs of label/value - lets translate them to properties
+		for(int i=0;i< tokens.length;i = i + 2) {
+		
+			Property property = new Property();
+			
+			property.setName(tokens[i]);
+			property.setValue(tokens[i+1]);
+			
+			this.properties.add(property);
+			
+		}
+		
 	}
 
 }
