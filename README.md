@@ -9,13 +9,13 @@ A logback appender that writes its data to a [vertx-elasticsearch-indexer](https
 
 ## Technical Usage
 
-The artefact is published on bintray / jcenter (https://bintray.com/romanpierson/maven/com.mdac.vertx-logback-elasticsearch-appender)
+The artefact is published on maven central.
 
 Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.mdac:vertx-logback-elasticsearch-appender:1.2.0_RC1'
+	compile 'com.mdac:vertx-logback-elasticsearch-appender:1.3.0'
 }
 ```
 
@@ -38,5 +38,5 @@ Environment properties can be defined as ${propname}. Static values can be just 
 
 ## Changelog
 
-Detailed changelog can be found [here](https://github.com/romanpierson/vertx-elasticsearch-indexer/blob/master/CHANGELOG.md).
+Detailed changelog can be found [here](https://github.com/romanpierson/vertx-logback-elasticsearch-appender/blob/master/CHANGELOG.md).
 
