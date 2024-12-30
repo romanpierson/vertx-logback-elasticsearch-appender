@@ -15,9 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mdac.logback.vertx.elasticsearch.appender.config.Property;
-import com.romanpierson.vertx.elasticsearch.indexer.ElasticSearchIndexerConstants;
-import com.romanpierson.vertx.elasticsearch.indexer.ElasticSearchIndexerConstants.Message.Structure.Field;
+import com.romanpierson.logback.vertx.elasticsearch.appender.Constants.Message.Structure.Field;
 
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -41,7 +39,6 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 	// Appender Settings
 	private String instanceIdentifier;
-	private Collection<Property> properties;
 
 	private MessageDigest hashDigest;
 
@@ -72,21 +69,6 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 			addError("\"instanceIdentifier\" property not set for appender named [" + name + "].");
 		}
 		
-		for (final Property property : this.properties) {
-
-			if (property.getName() == null || property.getName().trim().isEmpty() || property.getValue() == null
-					|| property.getValue().trim().isEmpty()) {
-				errors++;
-				addError("found invalid property for appender named [" + name + "].");
-			}
-
-			if (resolveStaticProperty(property)) {
-				continue;
-			}
-
-			extraParameters.put(property.getName(), property.getValue());
-		}
-		
 		fullStackTraceConverter = new ThrowableProxyConverter();
 		fullStackTraceConverter.setOptionList(Arrays.asList("full"));
 		fullStackTraceConverter.start();
@@ -97,25 +79,25 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 	}
 
-	private boolean resolveStaticProperty(final Property property) {
+	private boolean resolveStaticProperty(final String propertyName, final String propertyValue) {
 
-		if ("%level".equalsIgnoreCase(property.getValue())) {
-			labelLevel = property.getName();
+		if ("%level".equalsIgnoreCase(propertyValue)) {
+			labelLevel = propertyName;
 			return true;
-		} else if ("%thread".equalsIgnoreCase(property.getValue())) {
-			labelThread = property.getName();
+		} else if ("%thread".equalsIgnoreCase(propertyValue)) {
+			labelThread = propertyName;
 			return true;
-		} else if ("%message".equalsIgnoreCase(property.getValue())) {
-			labelMessage = property.getName();
+		} else if ("%message".equalsIgnoreCase(propertyValue)) {
+			labelMessage = propertyName;
 			return true;
-		} else if ("%ex".equalsIgnoreCase(property.getValue())) {
-			labelStackTrace = property.getName();
+		} else if ("%ex".equalsIgnoreCase(propertyValue)) {
+			labelStackTrace = propertyName;
 			return true;
-		} else if ("%exhash".equalsIgnoreCase(property.getValue())) {
-			labelStackTraceHash = property.getName();
+		} else if ("%exhash".equalsIgnoreCase(propertyValue)) {
+			labelStackTraceHash = propertyName;
 			return true;
-		} else if ("%logger".equalsIgnoreCase(property.getValue())) {
-			labelLogger = property.getName();
+		} else if ("%logger".equalsIgnoreCase(propertyValue)) {
+			labelLogger = propertyName;
 			return true;
 		}
 
@@ -157,7 +139,7 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 		if (isVertxInitialized) {
 
-			vertxEventBus.send(ElasticSearchIndexerConstants.EVENTBUS_EVENT_NAME, convert(eventObject));
+			vertxEventBus.send(Constants.EVENTBUS_EVENT_NAME, convert(eventObject));
 
 		} else {
 
@@ -225,7 +207,7 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 
 		this.offlineQueue.drainTo(drainedValues, currentSize);
 
-		drainedValues.forEach(s -> vertxEventBus.send(ElasticSearchIndexerConstants.EVENTBUS_EVENT_NAME, s));
+		drainedValues.forEach(s -> vertxEventBus.send(Constants.EVENTBUS_EVENT_NAME, s));
 
 		isVertxInitialized = true;
 
@@ -252,17 +234,14 @@ public class LogbackElasticSearchAppender extends UnsynchronizedAppenderBase<ILo
 			return;
 		}
 		
-		this.properties = new ArrayList<>();
-		
 		// If we come here it means we have pairs of label/value - lets translate them to properties
 		for(int i=0;i< tokens.length;i = i + 2) {
 		
-			Property property = new Property();
+			if(resolveStaticProperty(tokens[i], tokens[i+1])) {
+				continue;
+			}
 			
-			property.setName(tokens[i]);
-			property.setValue(tokens[i+1]);
-			
-			this.properties.add(property);
+			extraParameters.put(tokens[i], tokens[i+1]);
 			
 		}
 		
