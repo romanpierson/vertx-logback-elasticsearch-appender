@@ -10,12 +10,11 @@ repositories {
 }
 
 ext{
-	vertxVersion = '5.0.0.CR3'
-	vertxElasticsearchIndexer = '1.3.0'
-	jupiterVersion = '5.11.4'
-	jupiterLauncherVersion ='1.11.4'
-	slfApiVersion = '2.0.16'
-	logbackVersion = '1.5.15'
+	vertxVersion = '5.0.0.CR5'
+	jupiterVersion = '5.12.0'
+	jupiterLauncherVersion ='1.12.0'
+	slfApiVersion = '2.0.17'
+	logbackVersion = '1.5.17'
 }
 
 dependencies {
@@ -33,7 +32,7 @@ dependencies {
 	
 }
 
-jar.archiveFileName = "vertx-logback-elasticsearch-appender-1.3.0.jar"
+jar.archiveFileName = "vertx-logback-elasticsearch-appender-5.0.0-SNAPSHOT.jar"
 
 java {
     withSourcesJar()
@@ -45,9 +44,9 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             
-            groupId 'com.romanpierson'
-            artifactId 'vertx-logback-elasticsearch-appender'
-            version '1.3.0'
+            groupId = 'com.romanpierson'
+            artifactId = 'vertx-logback-elasticsearch-appender'
+            version = '5.0.0-SNAPSHOT'
             
             from components.java
 
@@ -77,6 +76,6 @@ jacocoTestReport {
 }
 
 wrapper() {
-  gradleVersion = '8.12'
+  gradleVersion = '8.13'
 }
 
