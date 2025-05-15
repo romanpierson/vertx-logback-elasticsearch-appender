@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.3.0 (Vert.x 5)
+
+(2025-05-15)
+
+* Functional identical version of `1.3.0` for `vert.x 5`
+
 ### 1.3.0
 
 (2023-12-09)
