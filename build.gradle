@@ -10,7 +10,7 @@ repositories {
 }
 
 ext{
-	vertxVersion = '5.0.0.CR8'
+	vertxVersion = '5.0.0'
 	jupiterVersion = '5.12.2'
 	jupiterLauncherVersion = '1.12.1'
 	slfApiVersion = '2.0.17'
@@ -32,7 +32,7 @@ dependencies {
 	
 }
 
-jar.archiveFileName = "vertx-logback-elasticsearch-appender-5.0.0-SNAPSHOT.jar"
+jar.archiveFileName = "vertx-logback-elasticsearch-appender-2.3.0.jar"
 
 java {
     withSourcesJar()
@@ -46,7 +46,7 @@ publishing {
             
             groupId = 'com.romanpierson'
             artifactId = 'vertx-logback-elasticsearch-appender'
-            version = '5.0.0-SNAPSHOT'
+            version = '2.3.0'
             
             from components.java
 
