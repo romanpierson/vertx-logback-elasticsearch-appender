@@ -15,9 +15,21 @@ Just add it as a dependency to your project (gradle example)
 
 ```xml
 dependencies {
-	compile 'com.mdac:vertx-logback-elasticsearch-appender:1.3.0'
+	compile 'com.mdac:vertx-logback-elasticsearch-appender:2.3.0'
 }
 ```
+
+## Compatibility with Vert.x core
+
+Since introduction of `vert.x 5` due to some architectural changes the master contains `vert.5` compatible version and its `vert.x 4` compatible counterpart continues on branch `vert.x-4.x`. 
+
+Those two versions are functional equivalent and you should just be able to switch to `vert.5` without any code changes. The plan is also to keep the two versions with same functionality.
+
+Therefore minor version will stay identical but major version will identify if the library is targeted to be used with `vert.x 4` (1) or `vert.x 5` (2)
+
+Logback ES Appender version 4.x / 5.x | Vertx version
+----|------
+1.3.0 / 2.3.0  | 4.5.1 > / 5.0.0 >
 
 ## Usage
 
